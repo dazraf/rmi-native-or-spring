@@ -81,7 +81,6 @@
       <groupId>fuzz</groupId>
       <artifactId>computeclient</artifactId>
       <version>0.0.1-SNAPSHOT</version>
-      <scope>runtime</scope>
     </dependency>
     
     <dependency>
