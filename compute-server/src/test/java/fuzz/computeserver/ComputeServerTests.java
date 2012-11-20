@@ -3,42 +3,34 @@ package fuzz.computeserver;
 import java.rmi.AccessException;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
-
-import org.junit.After;
 import org.junit.Test;
 
 import fuzz.computeclient.ClientApp;
-import fuzz.computeinterface.Compute;
+import fuzz.computeclient.ProxyFactory.ProxyType;
+import fuzz.computeserver.RegistrationStrategyFactory.StrategyType;
 
 public class ComputeServerTests {
 
-    static {
-        try {
-            App.createRegistry();
-        } catch (RemoteException e) {
-            e.printStackTrace();
-        }
-    }
-
-    @After
-    public void tearDown() throws AccessException, RemoteException, NotBoundException {
-        App.unbindService();
-    }
-
     @Test
     public void runNativeRMIServer() throws Exception {
-        Compute engine = new ComputeEngine();
-        App.startNativeRMIService(engine);
-        ClientApp.calcPi(ClientApp.getNativeRMIProxy());
-        ClientApp.calcPi(ClientApp.getSpringRMIProxy());
+        runClientServerTests(new ServerApp(StrategyType.NATIVE));
     }
 
     @Test
     public void runSpringRMIServer() throws Exception {
-        Compute engine = new ComputeEngine();
-        App.startSpringRMIService(engine);
-        ClientApp.calcPi(ClientApp.getNativeRMIProxy());
-        ClientApp.calcPi(ClientApp.getSpringRMIProxy());
+        runClientServerTests(new ServerApp(StrategyType.SPRING));
     }
 
+    private void runClientServerTests(ServerApp sa) throws RemoteException, Exception, AccessException,
+            NotBoundException {
+        sa.startup();
+        try {
+            ClientApp nativeClient = new ClientApp(ProxyType.NATIVE);
+            nativeClient.calcPi();
+            ClientApp springClient = new ClientApp(ProxyType.SPRING);
+            springClient.calcPi();
+        } finally {
+            sa.shutdown();
+        }
+    }
 }
