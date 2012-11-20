@@ -8,7 +8,7 @@ import fuzz.computeinterface.Compute;
 public class ClientApp {
     private Compute engine;
     
-    public static void main(String[] args) throws Exception {
+    public static void main(final String[] args) throws Exception {
         if (args.length == 0) {
             System.out.println("spring|native");
             System.exit(0);
@@ -18,7 +18,7 @@ public class ClientApp {
         new ClientApp(pt).calcPi();
     }
 
-    public ClientApp(ProxyType pt) throws RemoteException, Exception {
+    public ClientApp(final ProxyType pt) throws RemoteException, Exception {
         engine = ProxyFactory.getBuilder(pt, Compute.SERVICE_NAME, Compute.REGISTRY_HOST, Compute.REGISTRY_PORT).build(Compute.class);
     }
     

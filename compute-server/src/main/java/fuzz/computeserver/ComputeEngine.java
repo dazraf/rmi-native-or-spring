@@ -9,7 +9,7 @@ public class ComputeEngine implements Compute {
         super();
     }
 
-    public <T> T executeTask(Task<T> t) {
+    public <T> T executeTask(final Task<T> t) {
         return t.execute();
     }
 }

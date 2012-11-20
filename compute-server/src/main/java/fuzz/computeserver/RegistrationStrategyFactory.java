@@ -57,13 +57,11 @@ public class RegistrationStrategyFactory {
         }
     }
     private static Registry getRegistry() throws RemoteException {
-        Registry r = null;
         try {
-            r = LocateRegistry.createRegistry(Compute.REGISTRY_PORT);
+            return LocateRegistry.createRegistry(Compute.REGISTRY_PORT);
         } catch (Exception e) {
-            r = LocateRegistry.getRegistry(Compute.REGISTRY_PORT);            
+            return LocateRegistry.getRegistry(Compute.REGISTRY_PORT);            
         }
-        return r;
     }
     public interface RegistrationStrategy {
         <T extends Remote, I>void register(final String serviceName, final T service, final Class<I> serviceInterface) throws RemoteException;

@@ -22,7 +22,7 @@ public final class ProxyFactory<T> {
             return new ProxyBuilder() {
                 @SuppressWarnings("unchecked")
                 @Override
-                public <T> T build(Class<T> serviceClass) throws AccessException, RemoteException, NotBoundException {
+                public <T> T build(final Class<T> serviceClass) throws AccessException, RemoteException, NotBoundException {
                     return (T) registry.lookup(service);
                 }
             };
@@ -30,7 +30,7 @@ public final class ProxyFactory<T> {
             return new ProxyBuilder() {
                 @SuppressWarnings("unchecked")
                 @Override
-                public <T> T build(Class<T> serviceClass) throws Exception {
+                public <T> T build(final Class<T> serviceClass) throws Exception {
                     RmiProxyFactoryBean p = new RmiProxyFactoryBean();
                     p.setServiceInterface(serviceClass);
                     p.setServiceUrl("rmi://" + registryHostName + ":" + registryPort + "/" + service);
