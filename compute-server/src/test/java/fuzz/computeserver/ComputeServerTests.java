@@ -5,8 +5,8 @@ import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import org.junit.Test;
 
-import fuzz.computeclient.ClientApp;
-import fuzz.computeclient.ProxyFactory.ProxyType;
+import fuzz.computeclient.nativermi.ClientAppNative;
+import fuzz.computeclient.spring.ClientAppSpring;
 import fuzz.computeserver.RegistrationStrategyFactory.StrategyType;
 
 public class ComputeServerTests {
@@ -25,9 +25,9 @@ public class ComputeServerTests {
             NotBoundException {
         sa.startup();
         try {
-            ClientApp nativeClient = new ClientApp(ProxyType.NATIVE);
+            ClientAppNative nativeClient = new ClientAppNative();
             nativeClient.calcPi();
-            ClientApp springClient = new ClientApp(ProxyType.SPRING);
+            ClientAppSpring springClient = new ClientAppSpring();
             springClient.calcPi();
         } finally {
             sa.shutdown();

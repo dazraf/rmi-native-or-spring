@@ -23,6 +23,7 @@ public class ServerApp {
         StrategyType st = StrategyType.valueOf(args[0].trim().toUpperCase());
         ServerApp sa = new ServerApp(st);
         sa.run();
+        System.exit(0);
     }
 
     private void run() throws IOException, NotBoundException {
