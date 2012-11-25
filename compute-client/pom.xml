@@ -1,10 +1,11 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <groupId>fuzz</groupId>
-  <artifactId>computeclient</artifactId>
+  <artifactId>compute-client</artifactId>
   <version>0.0.1-SNAPSHOT</version>
-  <name>computeclient</name>
-<properties>
+  <name>compute-client</name>
+  <properties>
     <junit.version>4.5</junit.version>
     <maven.version>3.0.3</maven.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -75,6 +76,12 @@
       <groupId>org.springframework</groupId>
       <artifactId>spring-remoting</artifactId>
       <version>1.2.9</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>fuzz</groupId>
+      <artifactId>compute-pi</artifactId>
+      <version>0.0.1-SNAPSHOT</version>
     </dependency>
   </dependencies>
 </project>

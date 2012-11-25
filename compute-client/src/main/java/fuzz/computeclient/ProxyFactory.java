@@ -1,8 +1,5 @@
 package fuzz.computeclient;
 
-import java.rmi.AccessException;
-import java.rmi.NotBoundException;
-import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.security.InvalidParameterException;
@@ -14,36 +11,56 @@ public final class ProxyFactory<T> {
         NATIVE, SPRING
     }
 
-    public static ProxyBuilder getBuilder(final ProxyType proxyType, final String service,
-            final String registryHostName, final int registryPort) throws RemoteException {
+    private ProxyType proxyType = ProxyType.NATIVE;
+    private String serviceName;
+    private String registryHostName = "localhost";
+    private int registryPort = 1099;
+    private Class<T> serviceClass;
+
+    public ProxyFactory(String serviceName, Class<T> serviceClass) {
+        this.serviceName = serviceName;
+        this.serviceClass = serviceClass;
+    }
+
+    public ProxyFactory(ProxyType proxyType, String serviceName, Class<T> serviceClass, String registryHostName,
+            int registryPort) {
+        this.proxyType = proxyType;
+        this.serviceName = serviceName;
+        this.registryHostName = registryHostName;
+        this.registryPort = registryPort;
+        this.serviceClass = serviceClass;
+    }
+
+    public ProxyFactory<T> proxyType(ProxyType proxyType) {
+        this.proxyType = proxyType;
+        return this;
+    }
+
+    public ProxyFactory<T> registryHostName(String registryHostName) {
+        this.registryHostName = registryHostName;
+        return this;
+    }
+
+    public ProxyFactory<T> registryPort(int registryPort) {
+        this.registryPort = registryPort;
+        return this;
+    }
+
+    @SuppressWarnings("unchecked")
+    public T build() throws Exception {
         final Registry registry = LocateRegistry.getRegistry(registryHostName, registryPort);
         switch (proxyType) {
         case NATIVE:
-            return new ProxyBuilder() {
-                @SuppressWarnings("unchecked")
-                @Override
-                public <T> T build(final Class<T> serviceClass) throws AccessException, RemoteException, NotBoundException {
-                    return (T) registry.lookup(service);
-                }
-            };
+            return (T) registry.lookup(serviceName);
         case SPRING:
-            return new ProxyBuilder() {
-                @SuppressWarnings("unchecked")
-                @Override
-                public <T> T build(final Class<T> serviceClass) throws Exception {
-                    RmiProxyFactoryBean p = new RmiProxyFactoryBean();
-                    p.setServiceInterface(serviceClass);
-                    p.setServiceUrl("rmi://" + registryHostName + ":" + registryPort + "/" + service);
-                    p.afterPropertiesSet();
-                    return (T) p.getObject();
-                }
-            };
+            RmiProxyFactoryBean p = new RmiProxyFactoryBean();
+            p.setServiceInterface(serviceClass);
+            p.setServiceUrl("rmi://" + registryHostName + ":" + registryPort + "/" + serviceName);
+            p.afterPropertiesSet();
+            return (T) p.getObject();
         default:
             throw new InvalidParameterException("unknown proxy type");
         }
-    }
 
-    interface ProxyBuilder {
-        <T> T build(Class<T> serviceClass) throws Exception;
     }
 }
